@@ -1,0 +1,13 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter&family=Nunito&family=Poppins&family=Roboto:wght@300&family=Varela+Round&display=swap');
+
+.font-nunito {
+    font-family: 'Nunito', sans-serif;
+}
+
+.font-varela {
+    font-family: 'Varela Round', sans-serif;
+}
+
+.font-roboto {
+    font-family: 'Roboto', sans-serif;
+}
