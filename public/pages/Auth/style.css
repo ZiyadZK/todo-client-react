@@ -11,3 +11,26 @@
 .font-roboto {
     font-family: 'Roboto', sans-serif;
 }
+
+.scrollbar {
+    --sb-track-color: #afafaf;
+    --sb-thumb-color: #9459a7;
+    --sb-size: 5px;
+  
+    scrollbar-color: var(--sb-thumb-color) 
+                     var(--sb-track-color);
+  }
+  
+    .scrollbar::-webkit-scrollbar {
+    width: var(--sb-size);
+  }
+  
+  .scrollbar::-webkit-scrollbar-track {
+    background: var(--sb-track-color);
+    border-radius: 10px;
+  }
+  
+  .scrollbar::-webkit-scrollbar-thumb {
+    background: var(--sb-thumb-color);
+    border-radius: 10px;
+  }

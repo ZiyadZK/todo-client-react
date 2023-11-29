@@ -24,10 +24,10 @@ export default function LeftSidebar ({ w }) {
             </div>
             <hr className="my-5 w-full"/>
             <ul className="">
-                {links.map((item) => (
-                    <li>
-                        <a href={item.link} className="flex justify-between items-center p-2 rounded-2xl hover:bg-violet-50">
-                            <p className='w-fit flex gap-2 items-center text-zinc-500 font-bold text-sm'>
+                { links.map((item, index) => (
+                    <li key={index}>
+                        <a href={item.link} className="flex justify-between items-center p-2 pl-3 rounded-2xl hover:bg-violet-600 group transition-all duration-300">
+                            <p className='w-fit flex gap-3 items-center text-zinc-500 group-hover:text-violet-100 font-bold text-sm transition-all duration-300'>
                                 <FontAwesomeIcon icon={item.logo}></FontAwesomeIcon>
                                 {item.text}
                             </p>
@@ -36,7 +36,7 @@ export default function LeftSidebar ({ w }) {
                             : ""}
                         </a> 
                     </li>
-                ))}
+                )) }
             </ul>
         </div>
     )
