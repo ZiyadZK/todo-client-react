@@ -1,5 +1,6 @@
-import { faCog, faCogs, faEnvelope, faPaperPlane, faUser } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
+import RegisterForm from "../../Components/Register/RegisterForm";
+
 
 export default function RegisterPage() {
     return (
@@ -16,59 +17,7 @@ export default function RegisterPage() {
                     </p>
                     <hr className="my-5 opacity-0" />
                     <div className="flex flex-col items-center w-full">
-                        <form className="space-y-5 w-4/5">
-                            <div className="flex items-center w-full">
-                                <div className="w-1/6 flex items-center justify-center text-zinc-700">
-                                    <FontAwesomeIcon icon={faEnvelope}></FontAwesomeIcon>
-                                </div>
-                                <div className="w-5/6 relative">
-                                    <p className="absolute top-0 left-0 text-sm font-bold tracking-tighter text-zinc-700 translate-x-3 -translate-y-2.5 px-2 w-fit bg-white">
-                                        Email
-                                    </p>
-                                    <input required type="text" className="w-full h-10 px-5 rounded-2xl border outline-none hover:border-zinc-700 focus:border-zinc-700 transition-all duration-300 placeholder-zinc-100" autoComplete="off"></input>
-                                </div>
-                            </div>
-                            <div className="flex items-center w-full">
-                                <div className="w-1/6 flex items-center justify-center text-zinc-700">
-                                    <FontAwesomeIcon icon={faUser}></FontAwesomeIcon>
-                                </div>
-                                <div className="w-5/6 relative">
-                                    <p className="absolute top-0 left-0 text-sm font-bold tracking-tighter text-zinc-700 translate-x-3 -translate-y-2.5 px-2 w-fit bg-white">
-                                        Username
-                                    </p>
-                                    <input required type="text" className="w-full h-10 px-5 rounded-2xl border outline-none hover:border-zinc-700 focus:border-zinc-700 transition-all duration-300 placeholder-zinc-100" autoComplete="off"></input>
-                                </div>
-                            </div>
-                            <div className="flex items-center w-full">
-                                <div className="w-1/6 flex items-center justify-center text-zinc-700">
-                                    <FontAwesomeIcon icon={faCog}></FontAwesomeIcon>
-                                </div>
-                                <div className="w-5/6 relative">
-                                    <p className="absolute top-0 left-0 text-sm font-bold tracking-tighter text-zinc-700 translate-x-3 -translate-y-2.5 px-2 w-fit bg-white">
-                                        Password
-                                    </p>
-                                    <input required type="text" className="w-full h-10 px-5 rounded-2xl border outline-none hover:border-zinc-700 focus:border-zinc-700 transition-all duration-300 placeholder-zinc-100" autoComplete="off"></input>
-                                </div>
-                            </div>
-                            <div className="flex items-center w-full">
-                                <div className="w-1/6 flex items-center justify-center text-zinc-700">
-                                    <FontAwesomeIcon icon={faCogs}></FontAwesomeIcon>
-                                </div>
-                                <div className="w-5/6 relative">
-                                    <p className="absolute top-0 left-0 text-sm font-bold tracking-tighter text-zinc-700 translate-x-3 -translate-y-2.5 px-2 w-fit bg-white">
-                                        Confirm Password
-                                    </p>
-                                    <input required type="text" className="w-full h-10 px-5 rounded-2xl border outline-none hover:border-zinc-700 focus:border-zinc-700 transition-all duration-300 placeholder-zinc-100" autoComplete="off"></input>
-                                </div>
-                            </div>
-                            <div className="flex flex-col items-center w-full items-center">
-                                <button type="button" className="p-2 rounded-2xl font-bold tracking-tighter text-amber-100 bg-zinc-700 w-2/3 flex items-center justify-center gap-2 hover:bg-zinc-800 hover:text-amber-50">
-                                    Sign up
-                                    <FontAwesomeIcon icon={faPaperPlane}></FontAwesomeIcon>
-                                </button>
-                                <a href="/login" className="text-sm tracking-tighter hover:font-bold text-zinc-700 mt-2">Use an existing account</a>
-                            </div>
-                        </form>
+                        <RegisterForm />
                     </div>
                 </div>
                 <div className="w-1/2 relative overflow-hidden h-96">

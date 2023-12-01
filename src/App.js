@@ -20,14 +20,16 @@ function App() {
 
   return (
     <Router>
-      { !cookies.token ? <Navigate to="/login" /> : "" }
       <Routes>
-        <Route path='/' element={<HomePage />} />
-        <Route path='/login' element={<LoginPage />}></Route>
+        <Route path='/' element={cookies.token ? <HomePage /> : <Navigate to="/login" />} />
+        <Route path='/login' element={!cookies.token ? <LoginPage /> : <Navigate to="/" />}></Route>
         <Route path='/register' element={<RegisterPage />}></Route>
-        <Route path='/about' element={<AboutPage />}></Route>
-        <Route path='/notes' element={<NotesPage />}></Route>
-        <Route path='/verify' element={<VerifyPage />}></Route>
+        <Route path='/about' element={cookies.token ? <AboutPage /> : <Navigate to="/login" />}></Route>
+        <Route path='/notes' element={cookies.token ? <NotesPage /> : <Navigate to="/login" />}></Route>
+        <Route path='/verify' >
+          <Route path='success' element={<VerifyPage status="success" />} />
+          <Route path='failed' element={<VerifyPage status="failed" />} />
+        </Route>
       </Routes>
     </Router>
   );
