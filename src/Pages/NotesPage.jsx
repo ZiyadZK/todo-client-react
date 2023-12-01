@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import LeftSidebar from "../Components/Home/LeftSidebar";
-import { faDeleteLeft } from "@fortawesome/free-solid-svg-icons";
+import { faCalendar, faCircleCheck, faClock, faDeleteLeft, faDotCircle, faFileCirclePlus, faFilePen } from "@fortawesome/free-solid-svg-icons";
 
 export default function NotesPage() {
 
@@ -61,13 +61,62 @@ export default function NotesPage() {
                     </ul>
                 </div>
             </div>
-            <div className="w-2/6 bg-white rounded-2xl space-y-5 relative overflow-hidden">
+            <div className="w-2/6 bg-white rounded-2xl relative overflow-hidden">
+                
                 {/* Add New Note + Change Note */}
-                <div className="w-full p-5 border h-20 flex items-center justify-center gap-5">
-                    <div className="w-1/2 h-full border"></div>
-                    <div className="w-1/2 h-full border"></div>
+                <div className="w-full p-5 h-20 flex items-center justify-center gap-5">
+                    <button type="button" className="w-1/2 h-full flex items-center justify-center gap-2 border rounded-2xl text-amber-100 bg-zinc-500 font-bold hover:bg-zinc-700">
+                        <FontAwesomeIcon icon={faFileCirclePlus} />
+                        New Notes
+                    </button>
+                    <button type="button" className="w-1/2 h-full flex items-center justify-center gap-2 border rounded-2xl text-amber-100 bg-zinc-500 font-bold hover:bg-zinc-700">
+                        <FontAwesomeIcon icon={faFilePen} />
+                        Change Notes
+                    </button>
                 </div>
-                <div className="w-full border p-5 h-full max-h-[555px]"></div>
+                <div className="w-full p-5 h-full max-h-[555px]">
+                    <h1 className="font-bold w-fit text-transparent bg-clip-text bg-gradient-to-r from-zinc-700 to-amber-500 text-2xl">
+                        Notes Details
+                    </h1> 
+                    <hr className="w-full my-2" />
+                    <p className="italic text-zinc-400 tracking-tighter text-sm">
+                        Click one of your notes on the left to see details of it.
+                    </p>
+                    <hr className="my-2 opacity-0" />
+                    <div className="flex items-center gap-5 text-sm text-zinc-600 font-bold">
+                        <FontAwesomeIcon icon={faDotCircle} />
+                        <input type="text" value="Notes_1k2j3h1kj23h" className="outline-none" readOnly/>
+                    </div>
+                    <p className="flex items-center gap-5 text-sm text-zinc-600">
+                        <FontAwesomeIcon icon={faCalendar} />
+                        30-11-2023 <span className="font-bold">05:00 PM</span>
+                        <span className="text-green-500 ">
+                            <FontAwesomeIcon icon={faCircleCheck} /> Checked
+                        </span>
+                        <span className="text-orange-500 ">
+                            <FontAwesomeIcon icon={faClock} /> Pending
+                        </span>
+                    </p>
+                    <hr className="my-3 opacity-0" />
+                    <div className="flex gap-5">
+                        <p className="w-1/6 font-bold text-zinc-700">
+                            Title
+                        </p>
+                        <div className="w-5/6 text-zinc-700">
+                            Jokiin Mobile Legends sama Temen-temen
+                        </div>
+                    </div>
+                    <hr className="my-2 opacity-0" />
+                    <div className="flex gap-5">
+                        <p className="w-1/6 font-bold text-zinc-700">
+                            Description
+                        </p>
+                        <div className="w-5/6 text-zinc-700">
+                            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Tempora odit cupiditate harum necessitatibus minus praesentium eos qui, doloremque quae quisquam in ad pariatur modi reprehenderit provident eligendi, quis natus eaque.
+
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     );

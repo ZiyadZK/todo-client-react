@@ -1,9 +1,32 @@
 
 import LoginTitle from "../../Components/Login/LoginTitle";
 import LoginForm from "../../Components/Login/LoginForm";
-// import { Link } from "react-router-dom";
+import { useCookies } from "react-cookie";
+import Swal from "sweetalert2";
+import { useNavigate } from "react-router";
 
 const LoginPage = () => {
+
+    const navigate = useNavigate();
+
+    const [cookies, setCookie, removeCookie] = useCookies(['token']);
+    if(cookies.token) {
+        Swal.fire({
+            icon: "warning",
+            title: "Wait a minute,",
+            html: "Are you atempting to go to <b>Login page</b>?",
+            showCancelButton: true,
+            showConfirmButton: true
+        }).then((result) => {
+            if(result.isConfirmed) {
+                removeCookie('token');
+                navigate('/login');
+            }else{
+                navigate('/notes');
+            }
+        })
+        return null;
+    }
 
     return (
         <div className="w-full h-screen flex items-center justify-center bg-zinc-100 font-nunito">
