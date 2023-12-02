@@ -46,7 +46,9 @@ export default function RegisterForm() {
                         confirmPassword: confirmPassword
                     }
     
-                    const { data } = await axios.post(`https://todo-api-mqxn4q5g2q-as.a.run.app/api/register`, dataBody);
+                    const { data } = await axios.post(`https://todo-api-mqxn4q5g2q-as.a.run.app/api/register`, dataBody, {
+                        withCredentials: true
+                    });
                     const response = data.result;
                     setCookie('dataToken', response.dataToken, {maxAge: 120});
                     // console.log(response.dataToken);

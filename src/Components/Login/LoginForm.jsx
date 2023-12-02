@@ -58,6 +58,9 @@ export default function LoginForm() {
             username: username,
             password: password
         };
+
+        // const { data } = await axios.post('https://todo-api-mqxn4q5g2q-as.a.run.app/api/login', dataBody);
+        // console.log(data);
         
         Swal.fire({
             title: "Signing you in..",
@@ -65,10 +68,13 @@ export default function LoginForm() {
             showConfirmButton: false,
             didOpen: async () => {
                 try {
-                    const { data } = await axios.post('https://todo-api-mqxn4q5g2q-as.a.run.app/api/login', dataBody);
+                    const { data } = await axios.post('https://todo-api-mqxn4q5g2q-as.a.run.app/api/login', dataBody, {
+                        withCredentials: true
+                    });
+                    // console.log(dataBody);
                     if(data.result.token) {
                         const maxAge = isRemember ? 3600 : 1800;
-                        setCookie('token', data.result.token, {maxAge: maxAge});
+                        setCookie('token', data.result.token, {maxAge: maxAge, sameSite: true});
                         Swal.close();
                         Swal.fire({
                             icon: "success",
