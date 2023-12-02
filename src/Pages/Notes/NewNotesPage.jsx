@@ -1,9 +1,8 @@
 import { faCopy, faDotCircle } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import axios from "axios";
 import { useState } from "react"
 import Swal from "sweetalert2";
-// import NotesList from "./NotesList";
-
 
 
 export default function NewNotesPage() {
@@ -35,7 +34,7 @@ export default function NewNotesPage() {
         setDueDate(e.target.value);
     }
 
-    const addNewNotes = (e) => {
+    const addNewNotes = async (e) => {
         e.preventDefault();
         if(!title || !description || !dueDate) {
             Swal.fire({
@@ -49,12 +48,34 @@ export default function NewNotesPage() {
             return;
         }
         const newNotes = {
-            title: title,
-            description: description,
-            dueDate: dueDate
+            checked: false,
+            notes_name: title,
+            notes_desc: description,
+            due: dueDate
         };
-        // console.log(NotesList);
-        // setNotes(prevNotes => [...prevNotes, newNotes]);
+        try {
+            await axios.post('https://todo-api-mqxn4q5g2q-as.a.run.app/api/createNote', newNotes, {
+                withCredentials: true
+            }).then((response) => {
+                Swal.fire({
+                    icon: "success",
+                    title: "Add New Notes Success",
+                    text: "Your new notes has been added successfully",
+                    timer: 2000,
+                    showConfirmButton: false,
+                    allowOutsideClick: false
+                });
+            })
+        } catch (error) {
+            Swal.fire({
+                title: "Add New Notes Failed",
+                icon: "error",
+                text: "Please, try again later",
+                timer: 2000,
+                showConfirmButton: false,
+                allowOutsideClick: false,
+            })
+        }
     }
 
     return (

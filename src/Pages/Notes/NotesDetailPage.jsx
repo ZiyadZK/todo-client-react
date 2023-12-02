@@ -3,7 +3,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 
 
-export default function NotesDetailPage () {
+export default function NotesDetailPage ({ item }) {
+    // alert(item);
     return (
         <div className="w-full p-5 h-full max-h-[555px]">
             <h1 className="font-bold w-fit text-transparent bg-clip-text bg-gradient-to-r from-zinc-700 to-amber-500 text-2xl">
@@ -16,17 +17,22 @@ export default function NotesDetailPage () {
             <hr className="my-2 opacity-0" />
             <div className="flex items-center gap-5 text-sm text-zinc-600 font-bold">
                 <FontAwesomeIcon icon={faDotCircle} />
-                <input type="text" value="Notes_1k2j3h1kj23h" className="outline-none" readOnly/>
+                {item.notes_id || ''}
             </div>
             <p className="flex items-center gap-5 text-sm text-zinc-600">
                 <FontAwesomeIcon icon={faCalendar} />
-                30-11-2023 <span className="font-bold">05:00 PM</span>
+                { item.due || '-' }
+                { item.checked ? 
                 <span className="text-green-500 ">
                     <FontAwesomeIcon icon={faCircleCheck} /> Checked
-                </span>
+                </span> 
+                    : 
                 <span className="text-orange-500 ">
                     <FontAwesomeIcon icon={faClock} /> Pending
-                </span>
+                </span>  
+                }
+                
+                
             </p>
             <hr className="my-3 opacity-0" />
             <div className="flex gap-5">
@@ -34,7 +40,7 @@ export default function NotesDetailPage () {
                     Title
                 </p>
                 <div className="w-5/6 text-zinc-700">
-                    Jokiin Mobile Legends sama Temen-temen
+                    { item.notes_name || '-' }
                 </div>
             </div>
             <hr className="my-2 opacity-0" />
@@ -43,7 +49,7 @@ export default function NotesDetailPage () {
                     Description
                 </p>
                 <div className="w-5/6 text-zinc-700">
-                    Lorem ipsum dolor sit, amet consectetur adipisicing elit. Tempora odit cupiditate harum necessitatibus minus praesentium eos qui, doloremque quae quisquam in ad pariatur modi reprehenderit provident eligendi, quis natus eaque.
+                    { item.notes_desc || '-'}
                 </div>
             </div>
         </div>
