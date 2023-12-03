@@ -8,6 +8,7 @@ import ChangeNotesPage from "./Notes/ChangeNotesPage";
 import { faDeleteLeft, faFile, faFileCirclePlus, faFilePen } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import { connect, io } from "socket.io-client";
+import Swal from "sweetalert2";
 // import NotesList from "./Notes/NotesList";
 // import NotesList from "./Notes/NotesList";
 // import { NotesList } from "./Notes/NotesList";io
@@ -18,7 +19,6 @@ export default function NotesPage() {
     const [page, setPage] = useState('');
     const [detail, setDetail] = useState(null);
     const [searchValue, setSearchValue] = useState('');
-    const [viewFilteredNotes, setFilteredNotes] = useState([]);
 
     
 
@@ -80,6 +80,68 @@ export default function NotesPage() {
 
     }, [])
 
+    
+    const SubmitChecked = async (checked, notes_id) => {
+        // alert(notes_id);
+        try {
+            const dataBody = {
+                checked: checked === true ? 1 : 0
+            }
+            const { data } = await axios.put('https://todo-api-mqxn4q5g2q-as.a.run.app/api/updateNoteChecked?notes_id='+notes_id, dataBody, {
+                withCredentials: true
+            });
+            getNotes();
+        } catch (error) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Something went wrong!',
+                timer: 2000,
+                showConfirmButton: false
+            })
+        }
+    }
+
+    const NotesList = (items) => {
+        // console.log(checked)
+        return (
+            <ul className="">
+                {items.map((item, index) => (
+                    <li className="group" key={index}>
+                        <div className="cursor-pointer border border-zinc-100/0 hover:border-zinc-200 w-full h-10 rounded-2xl flex items-center p-5 focus:border-zinc-700 gap-2 text-xs text-zinc-700 text-start">
+                            <div className="w-1/6 flex gap-2 items-center">
+                                <div className="w-1/6 flex justify-center items-center">
+                                    
+                                    <input type="checkbox" checked={item.checked} onChange={(e) => SubmitChecked(!item.checked, item.notes_id)} name="" id="" className="accent-green-500 outline-none cursor-pointer"/>
+                                </div>
+                                <div className="w-5/6 text-zinc-600">
+                                    {item.due} <br />
+                                </div>
+                            </div>
+                            <div className="w-5/6 flex gap-2">
+                                <p className="w-5/6 truncate text-zinc-600">
+                                    <b>
+                                        {item.notes_name}
+                                    </b> <br />
+                                    {item.notes_desc}
+
+                                </p>
+                                <div className="w-1/6 flex gap-5 items-center justify-center">
+                                    <button onClick={() => {setDetail(notes[index]); setPage('detail')}} onDoubleClick={() => {setDetail(notes[index]); setPage('change')}} className="flex items-center justify-center opacity-0 group-hover:opacity-100">
+                                        <FontAwesomeIcon icon={faFile} className="text-zinc-600 group-hover:text-zinc-700 transition-all duration-150 cursor-pointer"/>
+                                    </button>
+                                    <button className="flex items-center justify-center opacity-0 group-hover:opacity-100 " onClick={() => deleteNote(item.notes_id)}>
+                                        <FontAwesomeIcon  icon={faDeleteLeft} className="text-zinc-600 group-hover:text-zinc-700 transition-all duration-150 cursor-pointer"/>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                ))}
+            </ul>
+        )
+    }
+
     const viewNotes = () => {
         if (searchValue !== '') {
             const filteredNotes = notes.filter(item => item.notes_name.toLowerCase().includes(searchValue.toLowerCase()));
@@ -95,32 +157,7 @@ export default function NotesPage() {
             return (
                 <div className="w-full h-full max-h-[555px] relative overflow-auto scrollbar">
                     <ul className="">
-                        {filteredNotes.map((item, index) => (
-                            <li className="group" key={index}>
-                                <div onClick={() => {setDetail(notes[index]); setPage('detail')}} onDoubleClick={() => {setDetail(notes[index]); setPage('change')}}  className="cursor-pointer border border-zinc-100/0 hover:border-zinc-200 w-full h-10 rounded-2xl flex items-center p-5 focus:border-zinc-700 gap-2 text-xs text-zinc-700 text-start">
-                                    <div className="w-1/6 flex gap-2 items-center">
-                                        <div className="w-1/6 flex justify-center items-center">
-                                            <input type="checkbox"  name="" id="" className="accent-green-500 outline-none cursor-pointer"/>
-                                        </div>
-                                        <div className="w-5/6 text-zinc-600">
-                                            {item.due} <br />
-                                        </div>
-                                    </div>
-                                    <div className="w-5/6 flex gap-2">
-                                        <p className="w-5/6 truncate text-zinc-600">
-                                            <b>
-                                                {item.notes_name}
-                                            </b> <br />
-                                            {item.notes_desc}
-
-                                        </p>
-                                        <button className="w-1/6 flex items-center justify-center opacity-0 group-hover:opacity-100 " onClick={() => deleteNote(item.notes_id)}>
-                                            <FontAwesomeIcon  icon={faDeleteLeft} className="text-zinc-600 group-hover:text-zinc-700 transition-all duration-150 cursor-pointer"/>
-                                        </button>
-                                    </div>
-                                </div>
-                            </li>
-                        ))}
+                        {NotesList(filteredNotes)}
                     </ul>
                 </div>
             )
@@ -137,32 +174,7 @@ export default function NotesPage() {
             return (
                 <div className="w-full h-full max-h-[555px] relative overflow-auto scrollbar">
                     <ul className="">
-                        {notes.map((item, index) => (
-                            <li className="group" key={index}>
-                                <div onClick={() => {setDetail(notes[index]); setPage('detail')}} onDoubleClick={() => {setDetail(notes[index]); setPage('change')}}  className="cursor-pointer border border-zinc-100/0 hover:border-zinc-200 w-full h-10 rounded-2xl flex items-center p-5 focus:border-zinc-700 gap-2 text-xs text-zinc-700 text-start">
-                                    <div className="w-1/6 flex gap-2 items-center">
-                                        <div className="w-1/6 flex justify-center items-center">
-                                            <input type="checkbox"  name="" id="" className="accent-green-500 outline-none cursor-pointer"/>
-                                        </div>
-                                        <div className="w-5/6 text-zinc-600">
-                                            {item.due} <br />
-                                        </div>
-                                    </div>
-                                    <div className="w-5/6 flex gap-2">
-                                        <p className="w-5/6 truncate text-zinc-600">
-                                            <b>
-                                                {item.notes_name}
-                                            </b> <br />
-                                            {item.notes_desc}
-    
-                                        </p>
-                                        <button className="w-1/6 flex items-center justify-center opacity-0 group-hover:opacity-100 " onClick={() => deleteNote(item.notes_id)}>
-                                            <FontAwesomeIcon  icon={faDeleteLeft} className="text-zinc-600 group-hover:text-zinc-700 transition-all duration-150 cursor-pointer"/>
-                                        </button>
-                                    </div>
-                                </div>
-                            </li>
-                        ))}
+                        {NotesList(notes)}
                     </ul>
                 </div>
             )
@@ -190,7 +202,7 @@ export default function NotesPage() {
                     </button>
                 </div>
                 {/* Lists Note */}
-                {viewNotes()}
+                { viewNotes() }
             </div>
             <div className="w-2/6 bg-white rounded-2xl relative overflow-hidden">
                 
@@ -205,7 +217,7 @@ export default function NotesPage() {
                         Change Notes
                     </button>
                 </div>
-                {viewPage()}
+                { viewPage() }
 
             </div>
         </div>
