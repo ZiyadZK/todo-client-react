@@ -5,7 +5,7 @@ import Swal from "sweetalert2";
 
 
 
-export default function ChangeNotesPage ({ item }) {
+export default function ChangeNotesPage ({ index, notes }) {
     
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
@@ -70,6 +70,7 @@ export default function ChangeNotesPage ({ item }) {
         }
     }
 
+    const item = notes[index];
 
     if(item === null || item === undefined) {
         return (

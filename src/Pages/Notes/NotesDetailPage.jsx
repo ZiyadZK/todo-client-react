@@ -1,10 +1,10 @@
 import { faCalendar, faCircleCheck, faClock, faDeleteLeft, faDotCircle, faFileCirclePlus, faFilePen } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-
-
-export default function NotesDetailPage ({ item }) {
+export default function NotesDetailPage ({ index, notes }) {
     // alert(item);
+    const item = notes[index];
+    // console.log(item);
     return (
         <div className="w-full p-5 h-full max-h-[555px]">
             <h1 className="font-bold w-fit text-transparent bg-clip-text bg-gradient-to-r from-zinc-700 to-amber-500 text-2xl">

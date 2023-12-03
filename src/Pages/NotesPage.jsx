@@ -17,19 +17,20 @@ import Swal from "sweetalert2";
 export default function NotesPage() {
     const [notes, setNotes] = useState([]);
     const [page, setPage] = useState('');
-    const [detail, setDetail] = useState(null);
+    const [index, setIndex] = useState();
     const [searchValue, setSearchValue] = useState('');
+    const [checkedOnly, setCheckedOnly] = useState(false);
 
     
 
     const viewPage = () => {
         switch(page) {
             case 'detail':
-                return <NotesDetailPage item={detail}/>;
+                return <NotesDetailPage index={index} notes={notes}/>;
             case 'new':
                 return <NewNotesPage getNote={getNotes} />
             case 'change':
-                return <ChangeNotesPage item={detail} />
+                return <ChangeNotesPage index={index} notes={notes} />
             default:
                 return null;
         }
@@ -107,12 +108,11 @@ export default function NotesPage() {
         return (
             <ul className="">
                 {items.map((item, index) => (
-                    <li className="group" key={index}>
-                        <div className="cursor-pointer border border-zinc-100/0 hover:border-zinc-200 w-full h-10 rounded-2xl flex items-center p-5 focus:border-zinc-700 gap-2 text-xs text-zinc-700 text-start">
+                    <li className="group" key={index} onDoubleClick={() => {setIndex(index); setPage('change')}}>
+                        <div  className="cursor-pointer border border-zinc-100/0 hover:border-zinc-200 w-full h-10 rounded-2xl flex items-center p-5 focus:border-zinc-700 gap-2 text-xs text-zinc-700 text-start">
                             <div className="w-1/6 flex gap-2 items-center">
                                 <div className="w-1/6 flex justify-center items-center">
-                                    
-                                    <input type="checkbox" checked={item.checked} onChange={(e) => SubmitChecked(!item.checked, item.notes_id)} name="" id="" className="accent-green-500 outline-none cursor-pointer"/>
+                                    <input type="checkbox" checked={item.checked} onChange={(e) => {SubmitChecked(!item.checked, item.notes_id); setIndex(index)}} name="" id="" className="accent-green-500 outline-none cursor-pointer"/>
                                 </div>
                                 <div className="w-5/6 text-zinc-600">
                                     {item.due} <br />
@@ -127,7 +127,7 @@ export default function NotesPage() {
 
                                 </p>
                                 <div className="w-1/6 flex gap-5 items-center justify-center">
-                                    <button onClick={() => {setDetail(notes[index]); setPage('detail')}} onDoubleClick={() => {setDetail(notes[index]); setPage('change')}} className="flex items-center justify-center opacity-0 group-hover:opacity-100">
+                                    <button onClick={() => { setIndex(index); setPage('detail')}}  className="flex items-center justify-center opacity-0 group-hover:opacity-100">
                                         <FontAwesomeIcon icon={faFile} className="text-zinc-600 group-hover:text-zinc-700 transition-all duration-150 cursor-pointer"/>
                                     </button>
                                     <button className="flex items-center justify-center opacity-0 group-hover:opacity-100 " onClick={() => deleteNote(item.notes_id)}>
@@ -143,6 +143,25 @@ export default function NotesPage() {
     }
 
     const viewNotes = () => {
+        if(checkedOnly === true) {
+            const filteredNotes = notes.filter(item => item.checked === true);
+            if(filteredNotes.length === 0) {
+                return (
+                    <div className="flex w-full items-center justify-center h-10">
+                        <h1 className="font-nunito font-bold text-zinc-300 text-sm">
+                            There's no checked note
+                        </h1>
+                    </div>
+                )
+            }
+            return (
+                <div className="w-full h-full max-h-[555px] relative overflow-auto scrollbar">
+                    <ul className="">
+                        {NotesList(filteredNotes)}
+                    </ul>
+                </div>
+            )
+        }
         if (searchValue !== '') {
             const filteredNotes = notes.filter(item => item.notes_name.toLowerCase().includes(searchValue.toLowerCase()));
             if(filteredNotes.length === 0) {
@@ -187,8 +206,8 @@ export default function NotesPage() {
             <LeftSidebar w="1/6" />
             {/* Main Content */}
             <div className="w-3/6 rounded-2xl bg-white p-5 space-y-5 h-full relative overflow-hidden">
-                <img src="/logo.png" alt="" className="absolute bottom-0 right-0 opacity-5 translate-x-24 translate-y-20 rotate-[-30deg]" />
-                <img src="/logo.png" alt="" className="absolute top-0 left-0 opacity-5 w-20 h-20 rotate-[30deg] translate-y-40 -translate-x-5"/>
+                <img src="/logo.png" alt="" className="absolute bottom-0 left-0 opacity-5 -translate-x-24 translate-y-20 rotate-[30deg]" />
+                <img src="/logo.png" alt="" className="absolute top-0 right-0 opacity-5 w-20 h-20 rotate-[-30deg] translate-y-40 translate-x-5"/>
                 {/* Search Bar, Filters */}
                 <div className="w-full h-10 flex items-center justify-between">
                     <div className="relative w-2/3">
@@ -197,12 +216,23 @@ export default function NotesPage() {
                             Search your note here
                         </p>
                     </div>
-                    <button className="w-fit p-2 px-4 rounded-2xl border font-bold text-zinc-700">
-                        Checked Only
-                    </button>
+                    <div className="flex flex-col items-center w-1/3">
+                        <button onClick={() => setCheckedOnly((state) => !state)} className={checkedOnly ? `bg-zinc-700 text-white text-sm border rounded-2xl p-2 px-2 font-bold transition-all duration-300` : `text-zinc-700 text-sm border rounded-2xl p-2 px-2 duration-300`}>
+                            View checked list
+                        </button>
+                        <div className="flex justify-center items-center w-full z-50">
+                            { checkedOnly ? (
+                                <button type="button" className="font-nunito hover:text-zinc-700 transition-all duration-300 font-bold text-zinc-500 text-xs focus:text-red-700 cursor-pointer">
+                                    Clear all checked list
+                                </button>
+                            ) : ""}
+                            
+                        </div>
+                    </div>
                 </div>
                 {/* Lists Note */}
                 { viewNotes() }
+                
             </div>
             <div className="w-2/6 bg-white rounded-2xl relative overflow-hidden">
                 
