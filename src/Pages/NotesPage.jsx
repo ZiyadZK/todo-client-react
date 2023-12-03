@@ -17,6 +17,10 @@ export default function NotesPage() {
     const [notes, setNotes] = useState([]);
     const [page, setPage] = useState('');
     const [detail, setDetail] = useState(null);
+    const [searchValue, setSearchValue] = useState('');
+    const [viewFilteredNotes, setFilteredNotes] = useState([]);
+
+    
 
     const viewPage = () => {
         switch(page) {
@@ -25,7 +29,7 @@ export default function NotesPage() {
             case 'new':
                 return <NewNotesPage getNote={getNotes} />
             case 'change':
-                return <ChangeNotesPage />
+                return <ChangeNotesPage item={detail} />
             default:
                 return null;
         }
@@ -37,7 +41,6 @@ export default function NotesPage() {
                 withCredentials: true
             });
             const response = data.result;
-            // console.log(response);
             getNotes();
         } catch (error) {
             console.error(error);
@@ -50,7 +53,6 @@ export default function NotesPage() {
                 withCredentials: true
             });
             const response = data.result;
-            console.log(response.result);
             setNotes(response.result);
         } catch (error) {
             console.error(error);
@@ -64,8 +66,8 @@ export default function NotesPage() {
             try {
                 const socket = io('https://todo-api-mqxn4q5g2q-as.a.run.app/');
                 socket.on('connect', () => {
-                    console.log(socket);
-                    console.log('connected');
+                    // console.log(socket);
+                    // console.log('connected');
                     socket.on('getNote', (data) => {
                         setNotes(data);
                     });
@@ -78,6 +80,96 @@ export default function NotesPage() {
 
     }, [])
 
+    const viewNotes = () => {
+        if (searchValue !== '') {
+            const filteredNotes = notes.filter(item => item.notes_name.toLowerCase().includes(searchValue.toLowerCase()));
+            if(filteredNotes.length === 0) {
+                return (
+                    <div className="flex w-full items-center justify-center h-10">
+                        <h1 className="font-nunito font-bold text-zinc-300 text-sm">
+                            There's no note with that value
+                        </h1>
+                    </div>
+                )
+            }
+            return (
+                <div className="w-full h-full max-h-[555px] relative overflow-auto scrollbar">
+                    <ul className="">
+                        {filteredNotes.map((item, index) => (
+                            <li className="group" key={index}>
+                                <div onClick={() => {setDetail(notes[index]); setPage('detail')}} onDoubleClick={() => {setDetail(notes[index]); setPage('change')}}  className="cursor-pointer border border-zinc-100/0 hover:border-zinc-200 w-full h-10 rounded-2xl flex items-center p-5 focus:border-zinc-700 gap-2 text-xs text-zinc-700 text-start">
+                                    <div className="w-1/6 flex gap-2 items-center">
+                                        <div className="w-1/6 flex justify-center items-center">
+                                            <input type="checkbox"  name="" id="" className="accent-green-500 outline-none cursor-pointer"/>
+                                        </div>
+                                        <div className="w-5/6 text-zinc-600">
+                                            {item.due} <br />
+                                        </div>
+                                    </div>
+                                    <div className="w-5/6 flex gap-2">
+                                        <p className="w-5/6 truncate text-zinc-600">
+                                            <b>
+                                                {item.notes_name}
+                                            </b> <br />
+                                            {item.notes_desc}
+
+                                        </p>
+                                        <button className="w-1/6 flex items-center justify-center opacity-0 group-hover:opacity-100 " onClick={() => deleteNote(item.notes_id)}>
+                                            <FontAwesomeIcon  icon={faDeleteLeft} className="text-zinc-600 group-hover:text-zinc-700 transition-all duration-150 cursor-pointer"/>
+                                        </button>
+                                    </div>
+                                </div>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            )
+        }else{
+            if(notes.length === 0) {
+                return (
+                    <div className="flex w-full items-center justify-center h-10">
+                        <h1 className="font-nunito font-bold text-zinc-300 text-sm">
+                            There's no note yet
+                        </h1>
+                    </div>
+                )
+            }
+            return (
+                <div className="w-full h-full max-h-[555px] relative overflow-auto scrollbar">
+                    <ul className="">
+                        {notes.map((item, index) => (
+                            <li className="group" key={index}>
+                                <div onClick={() => {setDetail(notes[index]); setPage('detail')}} onDoubleClick={() => {setDetail(notes[index]); setPage('change')}}  className="cursor-pointer border border-zinc-100/0 hover:border-zinc-200 w-full h-10 rounded-2xl flex items-center p-5 focus:border-zinc-700 gap-2 text-xs text-zinc-700 text-start">
+                                    <div className="w-1/6 flex gap-2 items-center">
+                                        <div className="w-1/6 flex justify-center items-center">
+                                            <input type="checkbox"  name="" id="" className="accent-green-500 outline-none cursor-pointer"/>
+                                        </div>
+                                        <div className="w-5/6 text-zinc-600">
+                                            {item.due} <br />
+                                        </div>
+                                    </div>
+                                    <div className="w-5/6 flex gap-2">
+                                        <p className="w-5/6 truncate text-zinc-600">
+                                            <b>
+                                                {item.notes_name}
+                                            </b> <br />
+                                            {item.notes_desc}
+    
+                                        </p>
+                                        <button className="w-1/6 flex items-center justify-center opacity-0 group-hover:opacity-100 " onClick={() => deleteNote(item.notes_id)}>
+                                            <FontAwesomeIcon  icon={faDeleteLeft} className="text-zinc-600 group-hover:text-zinc-700 transition-all duration-150 cursor-pointer"/>
+                                        </button>
+                                    </div>
+                                </div>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            )
+        }
+    }
+
+    
     return (
         <div className="w-full h-screen flex p-5 gap-5 bg-zinc-50 font-nunito ">
             <LeftSidebar w="1/6" />
@@ -88,56 +180,17 @@ export default function NotesPage() {
                 {/* Search Bar, Filters */}
                 <div className="w-full h-10 flex items-center justify-between">
                     <div className="relative w-2/3">
-                        <input type="text" className="peer w-full rounded-2xl border border-zinc-700 outline-none h-10 px-5 text-zinc-700 focus:border-violet-600 transition-all duration-150"/>
+                        <input type="text" onChange={e => setSearchValue(e.target.value)} className="peer w-full rounded-2xl border border-zinc-700 outline-none h-10 px-5 text-zinc-700 focus:border-violet-600 transition-all duration-150"/>
                         <p className="absolute top-0 left-0 translate-x-3 -translate-y-2.5 w-fit px-2 bg-white font-bold text-zinc-700 peer-focus:text-violet-600 text-sm transition-all duration-500">
                             Search your note here
                         </p>
                     </div>
-                    <div className="relative ">
-                        <select name="" id="" className="peer pr-10 rounded-2xl border border-zinc-500 h-10 pl-2 text-sm text-zinc-700 font-bold outline-none cursor-pointer hover:border-violet-300 hover:text-violet-700">
-                            <option value="">Name</option>
-                            <option value="">ID</option>
-                        </select>
-                        <p className="absolute top-0 left-0 translate-x-3 -translate-y-2.5 w-fit px-2 bg-white font-bold text-zinc-700 peer-hover:text-violet-600 text-sm transition-all duration-500">
-                            Search by
-                        </p>
-                    </div>
+                    <button className="w-fit p-2 px-4 rounded-2xl border font-bold text-zinc-700">
+                        Checked Only
+                    </button>
                 </div>
                 {/* Lists Note */}
-                <div className="w-full h-full max-h-[555px] relative overflow-auto scrollbar">
-                    <ul className="">
-                        {notes.map((items, index) => (
-                            <li className="group" key={index}>
-                                <div onDoubleClick={() => {setDetail(notes[index]); setPage('detail')}}  className="cursor-pointer border border-zinc-100/0 hover:border-zinc-200 w-full h-10 rounded-2xl flex items-center p-5 focus:border-zinc-700 gap-2 text-xs text-zinv-700 text-start">
-                                    <div className="w-1/6 flex gap-2 items-center">
-                                        <div className="w-1/6 flex justify-center items-center">
-                                            <input type="checkbox" checked={items.checked} name="" id="" className="accent-green-500 outline-none cursor-pointer"/>
-                                        </div>
-                                        <div className="w-5/6 text-zinc-600">
-                                            {items.due} <br />
-                                            {/* <span className="font-bold">18:30</span> */}
-                                        </div>
-                                    </div>
-                                    <div className="w-5/6 flex gap-2">
-                                        <p className="w-5/6 truncate text-zinc-600">
-                                            <b>
-                                                {items.notes_name}
-                                            </b> <br />
-                                            {items.notes_desc}
-                                        </p>
-                                        <div className="w-1/6 flex justify-center opacity-0 group-hover:opacity-100 transition-all duration-300">
-                                            <button type="button" onClick={() => deleteNote(items.notes_id)} className="text-red-600 flex gap-2 items-center">
-                                                <FontAwesomeIcon icon={faDeleteLeft} />
-                                                Delete
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-                        ))}
-
-                    </ul>
-                </div>
+                {viewNotes()}
             </div>
             <div className="w-2/6 bg-white rounded-2xl relative overflow-hidden">
                 
