@@ -121,7 +121,7 @@ export default function ChangeNotesPage ({ index, notes }) {
                                 New Due Date
                             </p>
                         </div>
-                        
+
                     </div>
                     <div className="flex w-full justify-between">
                         <div className="text-sm">
